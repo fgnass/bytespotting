@@ -1,0 +1,17 @@
+{
+  "name": "bytespotting",
+  "version": "1.0.0",
+  "description": "Create Spotify playlists from byte.fm recommendations",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "express": "^4.17.3",
+    "node-fetch": "^2.6.7",
+    "open": "^8.4.0",
+    "spotify-web-api-node": "^5.0.2"
+  }
+}
