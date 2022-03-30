@@ -4,7 +4,7 @@
   "description": "Create Spotify playlists from byte.fm recommendations",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js"
+    "start": "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} node ./index.js"
   },
   "keywords": [],
   "author": "",
