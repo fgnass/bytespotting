@@ -1,5 +1,5 @@
-const { Octokit } = require("@octokit/action");
-const octokit = new Octokit();
+const { Octokit } = require("@octokit/core");
+const octokit = new Octokit({ auth: process.env.PAT });
 
 async function run() {
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
