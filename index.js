@@ -10,7 +10,7 @@ async function run() {
   } = await octokit.rest.actions.getRepoPublicKey({ owner, repo });
   console.log("Get public key", key);
 
-  const value = "plain-text-secret";
+  const value = new Date().toISOString();
 
   const messageBytes = Buffer.from(value);
   const keyBytes = Buffer.from(key, "base64");
@@ -21,7 +21,7 @@ async function run() {
   await octokit.rest.actions.createOrUpdateRepoSecret({
     owner,
     repo,
-    secret_name: new Date().toISOString(),
+    secret_name: "FOO",
     encrypted_value,
   });
 }
