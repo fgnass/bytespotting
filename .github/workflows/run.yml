@@ -21,3 +21,9 @@ jobs:
       - run: npm start
         env:
           PAT: ${{ secrets.PAT }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          DAILY_PLAYLIST: ${{ secrets.DAILY_PLAYLIST }}
+          WEEKLY_PLAYLIST: ${{ secrets.WEEKLY_PLAYLIST }}

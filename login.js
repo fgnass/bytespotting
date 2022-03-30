@@ -1,7 +1,8 @@
+require("dotenv").config();
+
 const express = require("express");
 const SpotifyWebApi = require("spotify-web-api-node");
 const open = require("open");
-const { setValue } = require("../lib/kv");
 
 const PORT = process.env.PORT;
 var spotify = new SpotifyWebApi({
@@ -19,10 +20,8 @@ app.get("/callback", async (req, res) => {
   const {
     body: { access_token, refresh_token },
   } = await spotify.authorizationCodeGrant(req.query.code);
-  console.log("Access token:", access_token);
-  console.log("Refresh token:", refresh_token);
-  await setValue("access", access_token);
-  await setValue("refresh", refresh_token);
+  console.log("ACCESS_TOKEN", access_token);
+  console.log("REFRESH_TOKEN", refresh_token);
   process.exit();
 });
 
