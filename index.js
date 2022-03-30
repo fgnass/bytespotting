@@ -1,4 +1,6 @@
 const { Octokit } = require("@octokit/rest");
+const sodium = require("tweetsodium");
+
 const octokit = new Octokit({ auth: process.env.PAT });
 
 async function run() {
@@ -7,6 +9,21 @@ async function run() {
     data: { key },
   } = await octokit.rest.actions.getRepoPublicKey({ owner, repo });
   console.log("Get public key", key);
+
+  const value = "plain-text-secret";
+
+  const messageBytes = Buffer.from(value);
+  const keyBytes = Buffer.from(key, "base64");
+
+  const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+  const encrypted_value = Buffer.from(encryptedBytes).toString("base64");
+
+  await octokit.rest.actions.createOrUpdateRepoSecret({
+    owner,
+    repo,
+    secret_name: new Date().toISOString(),
+    encrypted_value,
+  });
 }
 
 run();
