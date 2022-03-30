@@ -1,4 +1,4 @@
-const { Octokit } = require("@octokit/core");
+const { Octokit } = require("@octokit/rest");
 const octokit = new Octokit({ auth: process.env.PAT });
 
 async function run() {
