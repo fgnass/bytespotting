@@ -10,10 +10,12 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@octokit/action": "^3.18.0",
     "cheerio": "^1.0.0-rc.10",
     "express": "^4.17.3",
     "node-fetch": "^2.6.7",
     "open": "^8.4.0",
-    "spotify-web-api-node": "^5.0.2"
+    "spotify-web-api-node": "^5.0.2",
+    "tweetsodium": "^0.0.5"
   }
 }
