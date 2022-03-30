@@ -6,7 +6,7 @@ const octokit = new Octokit({ auth: process.env.PAT });
 async function run() {
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
   const {
-    data: { key },
+    data: { key_id, key },
   } = await octokit.rest.actions.getRepoPublicKey({ owner, repo });
   console.log("Get public key", key);
 
@@ -21,6 +21,7 @@ async function run() {
   await octokit.rest.actions.createOrUpdateRepoSecret({
     owner,
     repo,
+    key_id,
     secret_name: "FOO",
     encrypted_value,
   });
