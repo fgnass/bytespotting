@@ -1,4 +1,4 @@
-# Bytespotting
+# ▶ Bytespotting
 
 Create Spotify playlists based on [ByteFM](https://www.byte.fm/) recommendations.
 
