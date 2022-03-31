@@ -4,7 +4,8 @@ const express = require("express");
 const SpotifyWebApi = require("spotify-web-api-node");
 const open = require("open");
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5917;
+
 var spotify = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,

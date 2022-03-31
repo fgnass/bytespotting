@@ -20,7 +20,7 @@ async function run() {
     data: { key_id, key },
   } = await octokit.rest.actions.getRepoPublicKey({ owner, repo });
 
-  async function setValue(name, value) {
+  async function setSecret(name, value) {
     const messageBytes = Buffer.from(value);
     const keyBytes = Buffer.from(key, "base64");
 
@@ -44,8 +44,8 @@ async function run() {
   } = await spotify.refreshAccessToken();
 
   spotify.setAccessToken(access_token);
-  await setValue("ACCESS_TOKEN", access_token);
-  if (refresh_token) await setValue("REFRESH_TOKEN", refresh_token);
+  await setSecret("ACCESS_TOKEN", access_token);
+  if (refresh_token) await setSecret("REFRESH_TOKEN", refresh_token);
   await getTracks();
   await getAlbums();
 }
@@ -55,7 +55,8 @@ async function getTracksOnPlaylist(id) {
   return body.items.map((i) => i.track.uri);
 }
 
-function regex(s) {
+function tokenMatch(s) {
+  // Create a RegExp so that an artist "Foo" would also match "The-Foo-Band"
   return new RegExp(s.replace(/\s/g, "[ -]"), "ig");
 }
 
@@ -69,6 +70,7 @@ async function getAlbums() {
   const albums = [];
   $(".post-title a").each(async (i, el) => {
     const text = $(el).text();
+    // The links on the page all have the format '<Artist> – „<Album>“'
     const m = /^(.+?) – „(.+?)“/.exec(text);
     if (m) {
       const [, artist, album] = m;
@@ -115,12 +117,15 @@ async function getTracks() {
 
   const uris = [];
   for (const { title, text } of tracks) {
+    // The "Tracks des Tages" page has no fixed format for the artist names.
+    // Therefore we search for the track title, go through the first 8 found
+    // tracks and check if the track's artist name appears in the link text.
     const res = await spotify.searchTracks(title.toLowerCase(), { limit: 8 });
     let artists;
     const track = res.body.tracks.items.find((t) => {
       artists = t.artists.map((a) => a.name);
       return artists.some((name) =>
-        name.split(", ").some((a) => regex(a).test(text))
+        name.split(", ").some((a) => tokenMatch(a).test(text))
       );
     });
     if (track) {
