@@ -57,7 +57,10 @@ async function getTracksOnPlaylist(id) {
 
 function tokenMatch(s) {
   // Create a RegExp so that an artist "Foo" would also match "The-Foo-Band"
-  return new RegExp(s.replace(/\s/g, "[ -]"), "ig");
+  return new RegExp(
+    s.replace(/\s/g, "[ -]").replace(/([*/?+()])/g, "\\$1"),
+    "ig"
+  );
 }
 
 async function getAlbums() {
