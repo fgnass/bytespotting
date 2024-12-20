@@ -29,12 +29,11 @@ The following environment variables need to be set in your Vercel project:
 
 - `SPOTIFY_CLIENT_ID`: The Client-ID of the Spotify app
 - `SPOTIFY_CLIENT_SECRET`: The Client-Secret of the Spotify app
-- `ACCESS_TOKEN`: The Spotify access token
 - `REFRESH_TOKEN`: The Spotify refresh token
 - `DAILY_PLAYLIST`: ID of the "track of the day" playlist
 - `WEEKLY_PLAYLIST`: ID of the "album of the week" playlist
-- `KV_REST_API_URL`: The URL for your Vercel KV storage (automatically set when you create a KV database)
-- `KV_REST_API_TOKEN`: The access token for your Vercel KV storage (automatically set when you create a KV database)
+- `UPSTASH_REDIS_REST_URL`: The URL for your Upstash Redis database
+- `UPSTASH_REDIS_REST_TOKEN`: The access token for your Upstash Redis database
 
 ## Initial Setup
 

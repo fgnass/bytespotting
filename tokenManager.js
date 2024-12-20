@@ -1,9 +1,9 @@
-import { createClient } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
+import SpotifyWebApi from "spotify-web-api-node";
 
-// Create KV client for storing tokens
-const kv = createClient({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
 export async function refreshSpotifyToken() {
@@ -17,8 +17,8 @@ export async function refreshSpotifyToken() {
     const data = await spotifyApi.refreshAccessToken();
     const newAccessToken = data.body.access_token;
 
-    // Store the new access token in Vercel KV
-    await kv.set("spotify_access_token", newAccessToken);
+    // Store the new access token in Upstash
+    await redis.set("spotify_access_token", newAccessToken, { ex: 3600 }); // expires in 1 hour
 
     return newAccessToken;
   } catch (error) {
@@ -29,11 +29,11 @@ export async function refreshSpotifyToken() {
 
 export async function getValidAccessToken() {
   try {
-    // Try to get token from KV first
-    let accessToken = await kv.get("spotify_access_token");
+    // Try to get token from Redis first
+    let accessToken = await redis.get("spotify_access_token");
 
     if (!accessToken) {
-      // If no token in KV, refresh and store new one
+      // If no token in Redis, refresh and store new one
       accessToken = await refreshSpotifyToken();
     }
 
