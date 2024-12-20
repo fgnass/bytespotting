@@ -1,0 +1,13 @@
+{
+  "crons": [
+    {
+      "path": "/api/update",
+      "schedule": "0 */2 * * *"
+    }
+  ],
+  "functions": {
+    "api/**/*": {
+      "runtime": "nodejs18"
+    }
+  }
+}

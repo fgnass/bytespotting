@@ -13,46 +13,50 @@ The sections below describe some of the Bytespotting internals and hopefully are
 
 ## Scheduling
 
-Bytespotting is run as GitHub action which is daily triggered by a cron expression.
+Bytespotting runs as a Vercel Cron Job which is triggered daily to update the playlists.
 
 ## Spotify Authentication
 
-Unfortunately things are a bit complicated. In order to update a playlist from a cron job, we need an access token from Spotify. And while there is a flow for [server-to-server authentication](https://developer.spotify.com/documentation/general/guides/authorization/client-credentials/), these tokens can't be used to modify playlists. Instead we need a [personal](https://developer.spotify.com/documentation/general/guides/authorization/code-flow/) access token and (since they expire) a refresh token.
+The application uses Spotify's OAuth2 flow for authentication. While there is a flow for [server-to-server authentication](https://developer.spotify.com/documentation/general/guides/authorization/client-credentials/), these tokens can't be used to modify playlists. Instead we need a [personal](https://developer.spotify.com/documentation/general/guides/authorization/code-flow/) access token and a refresh token since access tokens expire.
 
 ## Storing the tokens
 
-The access and refresh tokens need to be stored somewhere between the action runs. Since Bytespotting runs on GitHub it makes sense to use their infrastructure for persistence instead of bringing yet another service into the mix.
-Currently Bytespotting uses the [GitHub API](https://docs.github.com/en/rest/reference/actions#create-or-update-a-repository-secret) to store the tokes as repo secrets. Unfortunately the temporary [GITHUB_TOKEN](https://docs.github.com/en/actions/security-guides/automatic-token-authentication) which is created for each worflow run does not have the permission to update secrets. Therefore a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) (PAT) has to be created first.
-It would probably make sense to explore alternative solutions in future, like using the cache action or maybe build artifacts.
+The access and refresh tokens are stored securely using Vercel's Environment Variables. This provides a secure way to manage sensitive data without exposing it in the codebase.
 
-## Acquiring the initial tokens
+## Environment Variables
 
-To kick things off, we need to acquire some initial tokens. This can be done by running `node ./login` which fires up a local web server, starts the authentication flow and logs the tokens to the console.
-
-In order for this to work, a `.env` file must be created that contains these variables:
+The following environment variables need to be set in your Vercel project:
 
 - `SPOTIFY_CLIENT_ID`: The Client-ID of the Spotify app
 - `SPOTIFY_CLIENT_SECRET`: The Client-Secret of the Spotify app
-
-## Setting up the secrets
-
-After that, the following secrets need to be created for the GitHub repo:
-
-- `PAT`: A GitHub personal access token
 - `ACCESS_TOKEN`: The Spotify access token
 - `REFRESH_TOKEN`: The Spotify refresh token
 - `DAILY_PLAYLIST`: ID of the "track of the day" playlist
 - `WEEKLY_PLAYLIST`: ID of the "album of the week" playlist
-- `SPOTIFY_CLIENT_ID`: The Client-ID of the Spotify app
-- `SPOTIFY_CLIENT_SECRET`: The Client-Secret of the Spotify app
+- `KV_REST_API_URL`: The URL for your Vercel KV storage (automatically set when you create a KV database)
+- `KV_REST_API_TOKEN`: The access token for your Vercel KV storage (automatically set when you create a KV database)
+
+## Initial Setup
+
+1. Create a new project on Vercel and link it to your repository
+2. Run `node ./login` locally to get initial Spotify tokens
+3. Set up the environment variables in your Vercel project settings
+4. Deploy the project to Vercel
+
+## Development
+
+To run the project locally:
+
+1. Clone the repository
+2. Create a `.env` file with the required environment variables
+3. Run `npm install`
+4. Run `npm run dev` to start the development server
 
 ## Future improvements
 
-Currently the initial setup requires a lot of manual steps so there's still a lot of room for improvements:
+Some planned improvements for the project:
 
-- Let the login script set up the secrets
-- Let the login script create the playlists
-- Replace the login script by a hosted solution
-- Or alternatively, use a setup workflow with user input
-- Add GitHub auth flow instead of a PAT
-- Let others use my Spotify app without exposing the client secret
+- Create a web interface for easy setup and playlist management
+- Add support for custom scheduling intervals
+- Implement webhook notifications for successful/failed updates
+- Add support for multiple users/playlist combinations

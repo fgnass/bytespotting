@@ -10,13 +10,14 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@octokit/rest": "^18.12.0",
-    "cheerio": "^1.0.0-rc.10",
-    "dotenv": "^16.0.0",
+    "@vercel/kv": "^3.0.0",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.7",
     "express": "^4.17.3",
-    "node-fetch": "^2.6.7",
-    "open": "^8.4.0",
-    "spotify-web-api-node": "^5.0.2",
-    "tweetsodium": "^0.0.5"
+    "open": "^10.1.0",
+    "spotify-web-api-node": "^5.0.2"
+  },
+  "devDependencies": {
+    "vercel": "^39.2.2"
   }
 }

@@ -1,8 +1,6 @@
-const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const SpotifyWebApi = require("spotify-web-api-node");
-const { Octokit } = require("@octokit/rest");
-const sodium = require("tweetsodium");
+import { getValidAccessToken } from "./tokenManager.js";
 
 const dailyPlaylist = process.env.DAILY_PLAYLIST;
 const weeklyPlaylist = process.env.WEEKLY_PLAYLIST;
@@ -12,42 +10,19 @@ var spotify = new SpotifyWebApi({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-const octokit = new Octokit({ auth: process.env.PAT });
+export async function updatePlaylists() {
+  try {
+    const accessToken = await getValidAccessToken();
+    spotify.setAccessToken(accessToken);
 
-async function run() {
-  const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
-  const {
-    data: { key_id, key },
-  } = await octokit.rest.actions.getRepoPublicKey({ owner, repo });
+    await getTracks();
+    await getAlbums();
 
-  async function setSecret(name, value) {
-    const messageBytes = Buffer.from(value);
-    const keyBytes = Buffer.from(key, "base64");
-
-    const encryptedBytes = sodium.seal(messageBytes, keyBytes);
-    const encrypted_value = Buffer.from(encryptedBytes).toString("base64");
-
-    await octokit.rest.actions.createOrUpdateRepoSecret({
-      owner,
-      repo,
-      key_id,
-      secret_name: name,
-      encrypted_value,
-    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating playlists:", error);
+    throw error;
   }
-
-  spotify.setAccessToken(process.env.ACCESS_TOKEN);
-  spotify.setRefreshToken(process.env.REFRESH_TOKEN);
-
-  const {
-    body: { access_token, refresh_token },
-  } = await spotify.refreshAccessToken();
-
-  spotify.setAccessToken(access_token);
-  await setSecret("ACCESS_TOKEN", access_token);
-  if (refresh_token) await setSecret("REFRESH_TOKEN", refresh_token);
-  await getTracks();
-  await getAlbums();
 }
 
 async function getTracksOnPlaylist(id) {
@@ -147,5 +122,3 @@ async function getTracks() {
     spotify.addTracksToPlaylist(dailyPlaylist, uris, { position: 0 });
   }
 }
-
-run();
