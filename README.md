@@ -19,9 +19,7 @@ Bytespotting runs as a Vercel Cron Job which is triggered daily to update the pl
 
 The application uses Spotify's OAuth2 flow for authentication. While there is a flow for [server-to-server authentication](https://developer.spotify.com/documentation/general/guides/authorization/client-credentials/), these tokens can't be used to modify playlists. Instead we need a [personal](https://developer.spotify.com/documentation/general/guides/authorization/code-flow/) access token and a refresh token since access tokens expire.
 
-## Storing the tokens
-
-The access and refresh tokens are stored securely using Vercel's Environment Variables. This provides a secure way to manage sensitive data without exposing it in the codebase.
+Both tokens are stored in Redis.
 
 ## Environment Variables
 
@@ -29,33 +27,29 @@ The following environment variables need to be set in your Vercel project:
 
 - `SPOTIFY_CLIENT_ID`: The Client-ID of the Spotify app
 - `SPOTIFY_CLIENT_SECRET`: The Client-Secret of the Spotify app
-- `REFRESH_TOKEN`: The Spotify refresh token
 - `DAILY_PLAYLIST`: ID of the "track of the day" playlist
 - `WEEKLY_PLAYLIST`: ID of the "album of the week" playlist
-- `UPSTASH_REDIS_REST_URL`: The URL for your Upstash Redis database
-- `UPSTASH_REDIS_REST_TOKEN`: The access token for your Upstash Redis database
+- `KV_REST_API_URL`: The URL for your Upstash Redis database
+- `KV_REST_API_TOKEN`: The access token for your Upstash Redis database
 
 ## Initial Setup
 
 1. Create a new project on Vercel and link it to your repository
-2. Run `node ./login` locally to get initial Spotify tokens
-3. Set up the environment variables in your Vercel project settings
-4. Deploy the project to Vercel
+2. Set up the environment variables in your Vercel project settings
+3. Go to `/api/login` to retrive the inital tokens
 
 ## Development
 
 To run the project locally:
 
 1. Clone the repository
-2. Create a `.env` file with the required environment variables
+2. Create a `.env.local` file with the required environment variables
 3. Run `npm install`
-4. Run `npm run dev` to start the development server
+4. Run `npx vercel dev` to start the development server
 
 ## Future improvements
 
 Some planned improvements for the project:
 
-- Create a web interface for easy setup and playlist management
-- Add support for custom scheduling intervals
-- Implement webhook notifications for successful/failed updates
-- Add support for multiple users/playlist combinations
+- Display stats
+- Polish the onboarding

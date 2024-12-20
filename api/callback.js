@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { updateSpotifyTokens } from "../tokenManager.js";
+import { updateSpotifyTokens } from "../lib/tokenManager.js";
 
 const redirectUri = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/callback`

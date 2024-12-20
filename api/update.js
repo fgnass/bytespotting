@@ -1,4 +1,4 @@
-import { updatePlaylists } from "../index.js";
+import { updatePlaylists } from "../lib/index.js";
 
 export default async function handler(request, response) {
   try {
