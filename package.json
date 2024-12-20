@@ -4,9 +4,6 @@
   "description": "Create Spotify playlists from byte.fm recommendations",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "start": "node ./index.js"
-  },
   "keywords": [],
   "author": "",
   "license": "MIT",
