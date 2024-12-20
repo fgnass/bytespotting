@@ -4,10 +4,5 @@
       "path": "/api/update",
       "schedule": "0 12 * * *"
     }
-  ],
-  "functions": {
-    "api/**/*": {
-      "runtime": "@vercel/node@18"
-    }
-  }
+  ]
 }
