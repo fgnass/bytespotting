@@ -1,8 +1,8 @@
 import SpotifyWebApi from "spotify-web-api-node";
 
 const scopes = ["playlist-modify-public", "playlist-modify-private"];
-const redirectUri = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/api/callback`
+const redirectUri = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/callback`
   : "http://localhost:3000/api/callback";
 
 const spotifyApi = new SpotifyWebApi({
