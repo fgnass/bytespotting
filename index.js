@@ -1,18 +1,18 @@
-const cheerio = require("cheerio");
-const SpotifyWebApi = require("spotify-web-api-node");
-import { getValidAccessToken } from "./tokenManager.js";
+import { load } from "cheerio";
+import SpotifyWebApi from "spotify-web-api-node";
+import { getSpotifyToken } from "./tokenManager.js";
 
 const dailyPlaylist = process.env.DAILY_PLAYLIST;
 const weeklyPlaylist = process.env.WEEKLY_PLAYLIST;
 
-var spotify = new SpotifyWebApi({
+const spotify = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
 export async function updatePlaylists() {
   try {
-    const accessToken = await getValidAccessToken();
+    const accessToken = await getSpotifyToken();
     spotify.setAccessToken(accessToken);
 
     await getTracks();
@@ -43,7 +43,7 @@ async function getAlbums() {
   const existingTracks = await getTracksOnPlaylist(weeklyPlaylist);
   const response = await fetch("https://www.byte.fm/blog/alben-der-woche/");
   const body = await response.text();
-  const $ = cheerio.load(body);
+  const $ = load(body);
 
   const albums = [];
   $(".post-title a").each(async (i, el) => {
@@ -81,7 +81,7 @@ async function getTracks() {
   const existingTracks = await getTracksOnPlaylist(dailyPlaylist);
   const response = await fetch("https://www.byte.fm/blog/tracks-des-tages/");
   const body = await response.text();
-  const $ = cheerio.load(body);
+  const $ = load(body);
 
   const tracks = [];
   $(".post-content p").each(async (i, p) => {
