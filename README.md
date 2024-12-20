@@ -36,7 +36,7 @@ The following environment variables need to be set in your Vercel project:
 
 1. Create a new project on Vercel and link it to your repository
 2. Set up the environment variables in your Vercel project settings
-3. Go to `/api/login` to retrive the inital tokens
+3. Go to `/api/login` to retrive and store the inital tokens
 
 ## Development
 
@@ -46,10 +46,3 @@ To run the project locally:
 2. Create a `.env.local` file with the required environment variables
 3. Run `npm install`
 4. Run `npx vercel dev` to start the development server
-
-## Future improvements
-
-Some planned improvements for the project:
-
-- Display stats
-- Polish the onboarding
